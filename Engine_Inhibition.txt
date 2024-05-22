@@ -1,0 +1,60 @@
+#include <AFMotor.h>
+
+int mq3Pin = A0;  // Analog pin for MQ-3 sensor
+int buzzerPin = A2;
+
+AF_DCMotor motor1(1); // Motor 1 is connected to M1
+AF_DCMotor motor2(2); // Motor 2 is connected to M2
+AF_DCMotor motor3(3); // Motor 3 is connected to M3
+AF_DCMotor motor4(4); // Motor 4 is connected to M4
+
+void setup() {
+  // Set the maximum speed for all motors (0-255)
+  motor1.setSpeed(255);
+  motor2.setSpeed(255);
+  motor3.setSpeed(255);
+  motor4.setSpeed(255);
+
+    pinMode(mq3Pin, INPUT);
+  pinMode(buzzerPin, OUTPUT);
+  digitalWrite(buzzerPin, LOW); // Ensure the buzzer is initially off
+  Serial.begin(9600);
+}
+
+void loop() {
+
+   int sensorValue = analogRead(mq3Pin); // Read the sensor value
+  
+  // You may need to adjust this threshold depending on your sensor and environment
+  int threshold = 100; 
+
+   if (sensorValue > threshold) {
+    // High alcohol concentration detected, turn on the buzzer
+    digitalWrite(buzzerPin, HIGH);
+    Serial.println("High alcohol concentration detected!");
+  
+  // Run Motor 1 forward
+  motor1.run(RELEASE);
+  motor2.run(RELEASE);
+  motor3.run(RELEASE);
+  motor4.run(RELEASE);
+
+  delay(2000);
+  }  // Run motors for 2 seconds
+
+  else {
+    // Low alcohol concentration, turn off the buzzer
+    digitalWrite(buzzerPin, LOW);
+    Serial.println("Low alcohol concentration.");
+
+    motor1.run(FORWARD);
+  motor2.run(FORWARD);
+  motor3.run(FORWARD);
+  motor4.run(FORWARD);
+  }
+  
+  delay(100); // Pause for 1 second
+
+  // Reverse the direction of all motors
+// Pause for 1 second
+}
